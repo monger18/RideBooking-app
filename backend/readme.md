@@ -1,12 +1,3 @@
-Here is a `readme.md` file for the 
-
-backend
-
- folder documenting the `/user/register` endpoint:
-
-backend/readme.md:
-
-```markdown
 # User Registration API Documentation
 
 ## Endpoint
@@ -34,26 +25,10 @@ Send a JSON object with the following structure:
 
 ### Field Requirements
 
-- 
-
-fullname.firstname
-
- (string, required): Minimum 3 characters.
-- 
-
-fullname.lastname
-
- (string, optional): Minimum 3 characters if provided.
-- 
-
-email
-
- (string, required): Must be a valid email address.
-- 
-
-password
-
- (string, required): Minimum 8 characters.
+- **fullname.firstname** (string, required): Minimum 3 characters.
+- **fullname.lastname** (string, optional): Minimum 3 characters if provided.
+- **email** (string, required): Must be a valid email address.
+- **password** (string, required): Minimum 8 characters.
 
 ## Responses
 
@@ -93,6 +68,92 @@ password
 }
 ```
 
+# Captain Registration API Documentation
+
+## Endpoint
+
+`POST /captain/register`
+
+## Description
+
+Registers a new captain (driver) in the system. The endpoint validates the input, hashes the password, creates the captain, and returns an authentication token along with the captain data.
+
+## Request Body
+
+Send a JSON object with the following structure:
+
+```json
+{
+  "fullname": {
+    "firstname": "Jane",
+    "lastname": "Smith"
+  },
+  "email": "jane.smith@example.com",
+  "password": "yourpassword",
+  "vehicle": {
+    "color": "Red",
+    "plate": "ABC12345",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+### Field Requirements
+
+- **fullname.firstname** (string, required): Minimum 3 characters.
+- **fullname.lastname** (string, optional): Minimum 3 characters if provided.
+- **email** (string, required): Must be a valid email address.
+- **password** (string, required): Minimum 8 characters.
+- **vehicle.color** (string, required): Minimum 3 characters.
+- **vehicle.plate** (string, required): Minimum 8 characters.
+- **vehicle.capacity** (number, required): Must be a number.
+- **vehicle.vehicleType** (string, required): One of `"car"`, `"motorcycle"`, `"auto"`.
+
+## Responses
+
+| Status Code | Description                                                                                 | Response Example                                      |
+|-------------|---------------------------------------------------------------------------------------------|-------------------------------------------------------|
+| 201         | Captain registered successfully. Returns token and captain object.                           | `{ "token": "...", "captain": { ... } }`              |
+| 400         | Validation failed or captain already exists. Returns error message or validation errors.     | `{ "errors": [ { "msg": "...", ... } ] }` or `{ "message": "Captain already exists" }` |
+| 500         | Internal server error (unexpected error during registration).                                | `{ "error": "Internal Server Error" }`                |
+
+## Example Success Response
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "captain": {
+    "_id": "60c72b2f9b1d8e001c8e4b8b",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Smith"
+    },
+    "email": "jane.smith@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC12345",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "status": "inactive"
+  }
+}
+```
+
+## Example Error Response
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Plate must be at least 8 characters",
+      "param": "vehicle.plate",
+      "location": "body"
+    }
+  ]
+}
+```
 
 ## Endpoint
 
@@ -188,14 +249,22 @@ Returns the authenticated user's profile information. Requires a valid authentic
 
 For more details, see the implementation in 
 
-user.routes.js
+[user.routes.js](backend/routes/user.routes.js)
 
 , 
 
-user.controllers.js
+[user.controllers.js](backend/controllers/user.controllers.js)
+
+, 
+
+[captain.routes.js](backend/routes/captain.routes.js)
+
+, 
+
+[captain.controllers.js](backend/controllers/captain.controllers.js)
 
 , and 
 
-user.model.js
+[captain.model.js](backend/models/captain.model.js)
 
 .
