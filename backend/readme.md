@@ -68,6 +68,98 @@ Send a JSON object with the following structure:
 }
 ```
 
+## Endpoint
+
+`GET /user/profile`
+
+## Description
+
+Returns the authenticated user's profile information. Requires a valid authentication token.
+
+## Authentication
+
+- Requires Bearer token in the `Authorization` header or a valid `token` cookie.
+
+## Responses
+
+| Status Code | Description                                  | Response Example                                      |
+|-------------|----------------------------------------------|-------------------------------------------------------|
+| 200         | Returns the user profile object.             | `{ "user": { ... } }`                                 |
+| 401         | Authentication failed or token missing/invalid. | `{ "message": "Unauthorized" }`                    |
+
+## Example Success Response
+
+```json
+{
+  "user": {
+    "_id": "60c72b2f9b1d8e001c8e4b8a",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com"
+  }
+}
+```
+
+## Endpoint
+
+`POST /user/login`
+
+## Description
+
+Authenticates a user with email and password. Returns an authentication token and the user object if credentials are valid.
+
+## Request Body
+
+Send a JSON object with the following structure:
+
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "yourpassword"
+}
+```
+
+### Field Requirements
+
+- **email** (string, required): Must be a valid email address.
+- **password** (string, required): Minimum 8 characters.
+
+## Responses
+
+| Status Code | Description                                                        | Response Example                                      |
+|-------------|--------------------------------------------------------------------|-------------------------------------------------------|
+| 200         | Login successful. Returns token and user object.                   | `{ "token": "...", "user": { ... } }`                 |
+| 400         | Validation failed. Returns an array of validation errors.          | `{ "errors": [ { "msg": "...", ... } ] }`             |
+| 401         | Invalid email or password.                                         | `{ "message": "Invalid email or password" }`          |
+
+## Example Success Response
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "_id": "60c72b2f9b1d8e001c8e4b8a",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com"
+  }
+}
+```
+
+## Example Error Response
+
+```json
+{
+  "message": "Invalid email or password"
+}
+```
+
+---
+
 # Captain Registration API Documentation
 
 ## Endpoint
@@ -157,11 +249,11 @@ Send a JSON object with the following structure:
 
 ## Endpoint
 
-`POST /user/login`
+`POST /captain/login`
 
 ## Description
 
-Authenticates a user with email and password. Returns an authentication token and the user object if credentials are valid.
+Authenticates a captain with email and password. Returns an authentication token and the captain object if credentials are valid.
 
 ## Request Body
 
@@ -169,7 +261,7 @@ Send a JSON object with the following structure:
 
 ```json
 {
-  "email": "john.doe@example.com",
+  "email": "jane.smith@example.com",
   "password": "yourpassword"
 }
 ```
@@ -183,22 +275,28 @@ Send a JSON object with the following structure:
 
 | Status Code | Description                                                        | Response Example                                      |
 |-------------|--------------------------------------------------------------------|-------------------------------------------------------|
-| 200         | Login successful. Returns token and user object.                   | `{ "token": "...", "user": { ... } }`                 |
-| 400         | Validation failed. Returns an array of validation errors.          | `{ "errors": [ { "msg": "...", ... } ] }`             |
-| 401         | Invalid email or password.                                         | `{ "message": "Invalid email or password" }`          |
+| 200         | Login successful. Returns token and captain object.                | `{ "token": "...", "captain": { ... } }`              |
+| 400         | Validation failed or invalid credentials.                          | `{ "errors": [ { "msg": "...", ... } ] }` or `{ "message": "Invalid email and password" }` |
 
 ## Example Success Response
 
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "_id": "60c72b2f9b1d8e001c8e4b8a",
+  "captain": {
+    "_id": "60c72b2f9b1d8e001c8e4b8b",
     "fullname": {
-      "firstname": "John",
-      "lastname": "Doe"
+      "firstname": "Jane",
+      "lastname": "Smith"
     },
-    "email": "john.doe@example.com"
+    "email": "jane.smith@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC12345",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "status": "inactive"
   }
 }
 ```
@@ -207,45 +305,81 @@ Send a JSON object with the following structure:
 
 ```json
 {
-  "message": "Invalid email or password"
+  "message": "Invalid email and password"
 }
 ```
 
+---
+
 ## Endpoint
 
-`GET /user/profile`
+`GET /captain/profile`
 
 ## Description
 
-Returns the authenticated user's profile information. Requires a valid authentication token.
+Returns the authenticated captain's profile information. Requires a valid authentication token.
 
 ## Authentication
 
-- Requires Bearer token in the `Authorization` header or a valid `token` cookie.
+- Requires Bearer token in the `Authorization` header or a valid `captain_Token` cookie.
 
 ## Responses
 
 | Status Code | Description                                  | Response Example                                      |
 |-------------|----------------------------------------------|-------------------------------------------------------|
-| 200         | Returns the user profile object.             | `{ "user": { ... } }`                                 |
+| 200         | Returns the captain profile object.          | `{ "captain": { ... } }`                              |
 | 401         | Authentication failed or token missing/invalid. | `{ "message": "Unauthorized" }`                    |
 
 ## Example Success Response
 
 ```json
 {
-  "user": {
-    "_id": "60c72b2f9b1d8e001c8e4b8a",
+  "captain": {
+    "_id": "60c72b2f9b1d8e001c8e4b8b",
     "fullname": {
-      "firstname": "John",
-      "lastname": "Doe"
+      "firstname": "Jane",
+      "lastname": "Smith"
     },
-    "email": "john.doe@example.com"
+    "email": "jane.smith@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC12345",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "status": "inactive"
   }
 }
 ```
 
 ---
+
+## Endpoint
+
+`GET /captain/logout`
+
+## Description
+
+Logs out the authenticated captain by blacklisting the token and clearing the authentication cookie.
+
+## Authentication
+
+- Requires Bearer token in the `Authorization` header or a valid `captain_Token` cookie.
+
+## Responses
+
+| Status Code | Description                                  | Response Example                                      |
+|-------------|----------------------------------------------|-------------------------------------------------------|
+| 200         | Logout successful.                          | `{ "message": "Logout successfully" }`               |
+| 401         | Authentication failed or token missing/invalid. | `{ "message": "Unauthorized" }`                    |
+
+## Example Success Response
+
+```json
+{
+  "message": "Logout successfully"
+}
+```
 
 For more details, see the implementation in 
 
