@@ -69,10 +69,11 @@ module.exports.getCaptainProfile = async (req, res, next) => {
 }
 
 module.exports.logoutCaptain = async (req, res, next) => {
-    const token = req?.cookies?.captain_Token ||  req.headers.authorization?.split("")[1];
+    res.clearCookie("captain_token");
 
+    const token = req?.cookies?.captain_token || req?.headers?.authorization?.split(" ")[1];
+    
     await blacklistTokenModel.create({token});
-
-    res.clearCookie("captain_Token");
+    
     res.status(200).json({message: "Logout successfully"});
 }
