@@ -1,15 +1,24 @@
 import React from 'react'
 
-const ConfirmRide = ({ setVehicleFound, setConfirmRidePanelOpen}) => {
+const RidePopup = (props) => {
+ 
+  const { setRidePopupPanel, setConfirmRidePopupPanel } = props;
+
   return (
     <div>
-        <h5 
-         onClick={() => setConfirmRidePanelOpen(false)} 
+       <h5 
+         onClick={() => setRidePopupPanel(false)} 
          className='p-1 text-center w-[93%] absolute top-0'><i className="text-3xl text-gray-200 ri-arrow-down-wide-fill"></i>
         </h5>
-        <h3 className='text-xxl mb-5 font-semibold'>Confirm your Ride</h3>
+        <h3 className='text-xxl mb-5 font-semibold'>New Ride Available</h3>
+        <div className='flex items-center justify-between p-3 bg-yellow-400 rounded-lg mt-4'>
+          <div className='flex items-center gap-3'>
+            <img className='h-10 w-10 rounded-full object-cover' src="https://icon-library.com/images/person-png-icon/person-png-icon-29.jpg" alt="" />
+            <h2 className='text-lg font-medium'>Harsh Patel</h2>
+          </div> 
+          <h5 className='text-lg font-semibold'>2.25 KM</h5>
+        </div>
         <div className='flex gap-2 flex-col justify-between items-center'>
-           <img className='h-20' src="https://www.pngplay.com/wp-content/uploads/8/Uber-PNG-Photos.png" alt="" />  
            <div className='w-full mt-5'>
               <div className='flex items-center gap-5 p-3 border-b-2 border-gray-200'>
                 <i className="ri-map-pin-user-fill"></i>
@@ -35,16 +44,22 @@ const ConfirmRide = ({ setVehicleFound, setConfirmRidePanelOpen}) => {
            </div>
             <button
              onClick={() => {
-              setVehicleFound(true)
-              setConfirmRidePanelOpen(false)
+              setConfirmRidePopupPanel(true);
+              setRidePopupPanel(false);
              }}
              className='w-full mt-5 bg-green-500 text-white font-semibold p-2 rounded-lg'>
-              Confirm
+              Accept
+            </button>
+            <button
+             onClick={() => {
+              setRidePopupPanel(false);
+             }}
+             className='w-full mt-1 bg-gray-200 text-gray-700 font-semibold p-2 rounded-lg'>
+              Decline
             </button>
         </div>
     </div>
-
   )
 }
 
-export default ConfirmRide
+export default RidePopup
